@@ -11,7 +11,7 @@ using UnityEngine.Events;
 using UnityEngine.iOS;
 #endif
 
-namespace UGCF.Utils
+namespace CCEngine
 {
     public static class MiscUtils
     {
@@ -423,18 +423,18 @@ namespace UGCF.Utils
 //             return dateTime19700101.AddSeconds(timestamp) + TimeZoneInfo.Local.GetUtcOffset(dateTime19700101);
 //         }
 
-//         /// <summary>
-//         /// 返回时间代表的时间戳（单位：毫秒）。
-//         /// </summary>
-//         /// <param name="dateTime">时间。</param>
-//         /// <returns>时间代表的时间戳（单位：毫秒）。</returns>
-//         public static long DateTimeToTimestampInMilliseconds(DateTime dateTime = default)
-//         {
-//             if (dateTime == default)
-//                 dateTime = DateTime.Now;
-//             var dateTime19700101 = new DateTime(1970, 1, 1);
-//             return Convert.ToInt64((dateTime - dateTime19700101 - TimeZoneInfo.Local.GetUtcOffset(dateTime19700101)).TotalMilliseconds);
-//         }
+         /// <summary>
+         /// 返回时间代表的时间戳（单位：毫秒）。
+         /// </summary>
+         /// <param name="dateTime">时间。</param>
+         /// <returns>时间代表的时间戳（单位：毫秒）。</returns>
+         public static long DateTimeToTimestampInMilliseconds(DateTime dateTime = default)
+         {
+             if (dateTime == default)
+                 dateTime = DateTime.Now;
+             var dateTime19700101 = new DateTime(1970, 1, 1);
+             return Convert.ToInt64((dateTime - dateTime19700101 - TimeZoneInfo.Local.GetUtcOffset(dateTime19700101)).TotalMilliseconds);
+         }
 
 //         /// <summary>
 //         /// 返回时间代表的时间戳（单位：秒）。
@@ -603,23 +603,23 @@ namespace UGCF.Utils
 //             }
 //         }
 
-//         /// <summary> 在指定目录下创建文本文件</summary>
-//         public static bool CreateTextFile(string filePath, string contents)
-//         {
-//             try
-//             {
-//                 string directory = Path.GetDirectoryName(filePath);
-//                 if (!Directory.Exists(directory))
-//                     Directory.CreateDirectory(directory);
-//                 File.WriteAllText(filePath, contents);
-//                 return true;
-//             }
-//             catch (Exception e)
-//             {
-//                 LogUtils.LogError("创建文件失败：" + e.ToString());
-//                 return false;
-//             }
-//         }
+        /// <summary> 在指定目录下创建文本文件</summary>
+        public static bool CreateTextFile(string filePath, string contents)
+        {
+            try
+            {
+                string directory = Path.GetDirectoryName(filePath);
+                if (!Directory.Exists(directory))
+                    Directory.CreateDirectory(directory);
+                File.WriteAllText(filePath, contents);
+                return true;
+            }
+            catch (Exception e)
+            {
+                LogUtils.LogError("创建文件失败：" + e.ToString());
+                return false;
+            }
+        }
 
 //         /// <summary> 在指定目录下创建二进制文件</summary>
 //         public static bool CreateBytesFile(string filePath, byte[] bytes)

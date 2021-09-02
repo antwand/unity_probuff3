@@ -53,21 +53,23 @@
     <UnityVersion>2020.3.16f1c1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Assets\Util\Buff\ByteConvertHelper.cs" />
-    <Compile Include="Assets\NetWork\NetWorkUtils.cs" />
-    <Compile Include="Assets\NetWork\MessageListener.cs" />
-    <Compile Include="Assets\NetWork\MessageProcessor.cs" />
-    <Compile Include="Assets\Util\MiscUtils.cs" />
+    <Compile Include="Assets\CCEnger\Util\Buff\ByteConvertHelper.cs" />
+    <Compile Include="Assets\CCEnger\NetWork\NetWorkUtils.cs" />
+    <Compile Include="Assets\CCEnger\NetWork\MessageListener.cs" />
+    <Compile Include="Assets\CCEnger\NetWork\MessageProcessor.cs" />
+    <Compile Include="Assets\CCEnger\Util\MiscUtils.cs" />
     <Compile Include="Assets\Scripts\Test.cs" />
-    <Compile Include="Assets\NetWork\ProtobufSerilizer.cs" />
-    <Compile Include="Assets\NetWork\SocketClient.cs" />
-    <Compile Include="Assets\NetWork\MessageEventPoolManager.cs" />
-    <Compile Include="Assets\Util\WaitForUtils.cs" />
-    <Compile Include="Assets\NetWork\ProtobufByteBuffer.cs" />
+    <Compile Include="Assets\CCEnger\NetWork\ProtobufSerilizer.cs" />
+    <Compile Include="Assets\CCEnger\NetWork\SocketClient.cs" />
+    <Compile Include="Assets\CCEnger\NetWork\MessageEventPoolManager.cs" />
+    <Compile Include="Assets\CCEnger\Util\WaitForUtils.cs" />
+    <Compile Include="Assets\CCEnger\NetWork\ProtobufByteBuffer.cs" />
     <Compile Include="Assets\Scripts\Prodata.cs" />
-    <Compile Include="Assets\Util\Buff\NetBufferReader.cs" />
+    <Compile Include="Assets\CCEnger\Util\Buff\NetBufferReader.cs" />
     <Compile Include="Assets\UnityExtend\Loom.cs" />
-    <Compile Include="Assets\Util\Buff\NetBufferWriter.cs" />
+    <Compile Include="Assets\CCEnger\Util\Buff\NetBufferWriter.cs" />
+    <Compile Include="Assets\CCEnger\Util\LogUtils.cs" />
+    <Compile Include="Assets\CCEnger\UGCFMain.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

@@ -9,6 +9,7 @@ using System.Net;
 // using UGCF.Manager;
 using UGCF.UnityExtend;
  using UGCF.Utils;
+using CCEngine;
 
 namespace UGCF.Network
 {
@@ -245,7 +246,7 @@ namespace UGCF.Network
                     }
                 }
             }
-            // LogUtils.Log("结束线程：SendMessage");
+            Debug.Log("结束线程：SendMessage");
         }
 
         public bool Send(Header c2s)
@@ -274,7 +275,7 @@ namespace UGCF.Network
         }
         catch (Exception e)
         {
-            //LogUtils.Log(e.ToString());
+            Debug.Log(e.ToString());
             sendSuccess = false;
         }
          return sendSuccess;
@@ -291,7 +292,7 @@ namespace UGCF.Network
             try
             {
                 int count = mSocket.EndSend(ar);
-                //Debug.Log("向服务器发送的字节数EndSend" + count);
+                Debug.Log("向服务器发送的字节数EndSend" + count);
             }
             catch (Exception e)
             {
@@ -344,10 +345,10 @@ namespace UGCF.Network
                 }
                 else
                 {
-                    //LogUtils.Log("ReceiveMessage：未接收到数据");
+                    Debug.Log("ReceiveMessage：未接收到数据");
                 }
             }
-            //LogUtils.Log("结束线程：ReceiveMessage");
+            Debug.Log("结束线程：ReceiveMessage");
         }
 
         /// <summary>
@@ -404,7 +405,7 @@ namespace UGCF.Network
          bool isReconnecting = false;
         void ToReconnect()
         {
-            //LogUtils.Log("正在尝试发起重连");
+            Debug.Log("正在尝试发起重连");
             if (isReconnecting)
                 return;
             isReconnecting = true;
@@ -417,7 +418,7 @@ namespace UGCF.Network
         /// </summary>
         void Reconnect()
         {
-            //LogUtils.Log("正在尝试重连");
+            Debug.Log("正在尝试重连");
             if (!this)
                 return;
             CloseSocket();
@@ -456,7 +457,7 @@ namespace UGCF.Network
         {
             try
             {
-               Debug.Log("关闭Socket");
+                Debug.Log("关闭Socket");
                 PauseThread();
                 if (mSocket != null && mSocket.Connected)
                 {
@@ -469,7 +470,7 @@ namespace UGCF.Network
             }
             catch (Exception e)
             {
-               Debug.Log(e.ToString());
+                Debug.Log(e.ToString());
                 if (closeSocketLoopCount < 2)
                 {
                     closeSocketLoopCount++;
@@ -490,13 +491,13 @@ namespace UGCF.Network
 
          public void ContinueThread()
          {
-        //    // LogUtils.Log("线程继续");
+             Debug.Log("线程继续");
              manual.Set();
          }
 
         public void PauseThread()
         {
-           // LogUtils.Log("线程暂停");
+            Debug.Log("线程暂停");
             manual.Reset();
         }
 
