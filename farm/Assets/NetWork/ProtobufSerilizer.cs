@@ -3,13 +3,13 @@ using System.IO;
 //using ProtoBuf;
 using System;
 using UnityEngine;
-//using UGCF.Utils;
+using UGCF.Utils;
 
 namespace UGCF.Network
 {
     public class ProtobufSerilizer
     {
-        // /// <summary>
+        /// <summary>
         // /// 将消息序列化为二进制的方法
         // /// </summary>
         // /// <param name="model">要序列化的对象</param>
@@ -33,7 +33,7 @@ namespace UGCF.Network
         //     }
         //     catch (Exception ex)
         //     {
-        //         //LogUtils.Log("序列化失败: " + ex.ToString());
+        //         Debug.Log("序列化失败: " + ex.ToString());
         //         return null;
         //     }
         // }
@@ -60,7 +60,7 @@ namespace UGCF.Network
         //     }
         //     catch (Exception ex)
         //     {
-        //         LogUtils.Log("反序列化失败: " + ex.ToString());
+        //         Debug.Log("反序列化失败: " + ex.ToString());
         //         return default;
         //     }
         // }

@@ -8,7 +8,7 @@ message ProTest
 
 
 message Header {
-  int32 id = 1;
+  sint32 id = 1;
   bytes data = 2;
   int32 seq = 3; // 序列，默认0
   int32 msgType = 4; // 0=push, 1=req, 2=resp  

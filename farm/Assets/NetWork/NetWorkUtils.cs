@@ -20,9 +20,6 @@ using System.Text;
 namespace UGCF.Network
 {
 
-   
-
-
     public class NetWorkUtils
     {
 
@@ -35,60 +32,40 @@ namespace UGCF.Network
         /// <param name="insertLength">是否在消息头部插入消息长度</param>
         public static byte[] BuildPackage(Header c2s, bool insertLength = false)
         {
-            //ByteString bytestr = c2s.Data;
-           // C0001_HeartbeatReqMessage pt_3 = C0001_HeartbeatReqMessage.Parser.ParseFrom(bytestr.ToByteArray());
+            byte[] msgBytes = c2s.ToByteArray();
+
+            //开始封装 
+            int begin_leng = 4;
+            uint len = (uint)(begin_leng + msgBytes.Length);
+            byte[] sendBytes = new byte[len];
+            byte a = (byte)(len >> 24);
+            byte b = (byte)((len & 0xff0000) >> 16);
+            byte c = (byte)((len & 0xff00) >> 8);
+            byte d = (byte)(len & 0xff);
+            sendBytes[0] = a;
+            sendBytes[1] = b;
+            sendBytes[2] = c;
+            sendBytes[3] = d;
 
 
+            //组装 
+            //byte[] sendBytes = new byte[len+2]; //发送信息还有头部信息
+            //int id = 1;
+            //sendBytes[4] = (byte)(id >> 0);
+            //sendBytes[5] = (byte)(id >> 8);
+            //begin_leng = begin_leng + 2;
 
-            //byte[] b = ProtobufSerilizer.Serialize(c2s);
-            byte[] ctsByte = c2s.ToByteArray();
+            // 组装协议名称
+            //Array.Copy(protoNameBytes, 0, sendBytes, 2, protoNameBytes.Length);
+            // 组装协议
+            Array.Copy(msgBytes, 0, sendBytes, begin_leng, msgBytes.Length);
+            //ByteArray ba = new ByteArray(sendBytes);
+            //msgBytes.CopyTo(sendBytes, msgBytes.Length);
+            Debug.Log("发送数据长度："+ len);
+            Debug.Log(sendBytes.Length);
+            ByteConvertHelper.Console(sendBytes);
 
-
-            // C0001_HeartbeatReqMessage h = new C0001_HeartbeatReqMessage();
-            // h.SendTime = 15f;
-            // byte[] hbyte = c2s.ToByteArray();
-            //  Debug.Log(hbyte.Length);
-            //  Debug.Log(hbyte.Length + 4 + 4 * 3);
-
-            //byte[] data = new byte[] { 1, c2s.ToByteString(), 0,0 };
-            //byte[] b = new byte[0];
-            //if (b == null)
-            //    return new byte[0];
-
-
-            // ProtobufByteBuffer buf = null;
-            //常规情况下，长度一般为4个字节
-            //也可以出于安全目的，自由定义该长度，同时也可以插入一定的安全校验数据
-            //if (insertLength)
-            // {
-            // buf = ProtobufByteBuffer.Allocate(b.Length + 4);
-            // buf.WriteInt(b.Length + 4);
-            //}
-            // else
-            // {
-            // buf = ProtobufByteBuffer.Allocate(b.Length );
-            // }
-
-
-
-            //旧的  
-            // 4 个字节 
-            //Byte[] enddata = new byte[b.Length + 4];
-            //buf.WriteInt(1);//4  id 
-
-
-            //buf.WriteBytes(h.ToByteArray()); // data  13 
-
-            //buf.WriteInt(1);// 4  seq
-            // buf.WriteInt(1);// 4  msgType
-
-
-            //新的 
-            // buf.WriteBytes(b);//自定义的结构 
-            //return buf.GetBytes();
-
-
-
+            return sendBytes;
 
             //构造
             /**
@@ -103,7 +80,7 @@ namespace UGCF.Network
             return (marshalEndian_buff);
             **/
 
-
+            /**
             //内容的长度 
             int msglen = ctsByte.Length;
             byte[] msglen_bytes = ByteConvertHelper.Int32ToBytes((uint)msglen);
@@ -119,37 +96,6 @@ namespace UGCF.Network
                 writer.Flush();
                 return ms.ToArray();
             }
-
-
-
-
-            //Buffer.BlockCopy(b1, 0, b3, 0, b1.Length);//这种方法仅适用于字节数组
-
-            // MemoryStream m_stream = new MemoryStream();
-            // BinaryWriter m_writer = new BinaryWriter(m_stream);
-            // m_writer.Write(7);
-            //m_writer.Write(10);
-            //m_clientSocket.Send(writer.Finish());
-
-
-            /**
-            //byte[] msgmsg = new byte[b.Length + 4];
-            //MemoryStream ms = new MemoryStream();
-            //ms.Write(b.Length + 4);
-            MemoryStream stream = new MemoryStream();
-            using (BinaryWriter writer = new BinaryWriter(stream))
-            {
-                writer.Write(b.Length+4);
-                writer.Write(b);
-                //writer.Write(1);
-                //writer.Write(1);
-
-                byte[] bytes1 = stream.ToArray();
-                return bytes1;
-            }
-           // byte[] bytes = stream.ToArray();
-            byte[] bytes =  stream.GetBuffer();
-            return bytes;
             **/
         }
     }

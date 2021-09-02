@@ -72,7 +72,7 @@ namespace CCEngine
 
 
         /**
-         * 
+         *  BytesToInt32  转int32 
          * */
         public static uint BytesToInt32(byte[] bs)
         {
@@ -102,6 +102,44 @@ namespace CCEngine
 
 
         ////////////////////////////////////////////////////////////////////////
+
+        /// <summary>
+        /// 比较两个字节数组是否相等
+        /// </summary>
+        /// <param name="b1">byte数组1</param>
+        /// <param name="b2">byte数组2</param>
+        /// <returns>是否相等</returns>
+        public static bool PasswordEquals(byte[] b1, byte[] b2)
+        {
+            if (b1.Length != b2.Length) return false;
+            if (b1 == null || b2 == null) return false;
+            for (int i = 0; i < b1.Length; i++)
+                if (b1[i] != b2[i])
+                    return false;
+            return true;
+        }
+
+
+
+        /**
+         *  打印 byte 数组的  
+         * **/
+        public static void Console(Byte[] bytes)
+        {
+            //double d = 123.465;
+            //Byte[] bytes = BitConverter.GetBytes(d);
+            string s_2 = "";
+            string s = "";
+            foreach (byte b in bytes)
+            {
+                //Debug.Log(b.ToString("X2") + " ");
+                s_2 = s_2 + " " + b.ToString("X2") + " ";
+                s = s + " " + b.ToString() + " ";
+            }
+
+            Debug.Log("s_2:" + s_2);
+            Debug.Log("s:"+s);
+        }
 
         /**
          *  吧 struct 转化为 byte数组 

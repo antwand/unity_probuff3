@@ -254,7 +254,7 @@ namespace UGCF.Network
         try
         {
                 Debug.Log("发送数据");
-            int sendLength = mSocket.Send(NetWorkUtils.BuildPackage(c2s, true), SocketFlags.None);
+                int sendLength = mSocket.Send(NetWorkUtils.BuildPackage(c2s, true), SocketFlags.None);
                
 
                 sendSuccess = sendLength > 0;

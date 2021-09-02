@@ -21,7 +21,7 @@ public static partial class ProdataReflection {
     byte[] descriptorData = global::System.Convert.FromBase64String(
         string.Concat(
           "Cgtwcm9kYXRhLnBybyIjCgdQcm9UZXN0EgoKAmlkGAEgASgFEgwKBG5pY2sY",
-          "AiABKAkiQAoGSGVhZGVyEgoKAmlkGAEgASgFEgwKBGRhdGEYAiABKAwSCwoD",
+          "AiABKAkiQAoGSGVhZGVyEgoKAmlkGAEgASgREgwKBGRhdGEYAiABKAwSCwoD",
           "c2VxGAMgASgFEg8KB21zZ1R5cGUYBCABKAUiLQoZQzAwMDFfSGVhcnRiZWF0",
           "UmVxTWVzc2FnZRIQCghzZW5kVGltZRgBIAEoAiIuChpDMDAwMV9IZWFydGJl",
           "YXRSZXNwTWVzc2FnZRIQCghzZW5kVGltZRgBIAEoAiIpChVDMDAwMl9DbG9j",
@@ -314,7 +314,7 @@ public sealed partial class Header : pb::IMessage<Header> {
   public void WriteTo(pb::CodedOutputStream output) {
     if (Id != 0) {
       output.WriteRawTag(8);
-      output.WriteInt32(Id);
+      output.WriteSInt32(Id);
     }
     if (Data.Length != 0) {
       output.WriteRawTag(18);
@@ -334,7 +334,7 @@ public sealed partial class Header : pb::IMessage<Header> {
   public int CalculateSize() {
     int size = 0;
     if (Id != 0) {
-      size += 1 + pb::CodedOutputStream.ComputeInt32Size(Id);
+      size += 1 + pb::CodedOutputStream.ComputeSInt32Size(Id);
     }
     if (Data.Length != 0) {
       size += 1 + pb::CodedOutputStream.ComputeBytesSize(Data);
@@ -376,7 +376,7 @@ public sealed partial class Header : pb::IMessage<Header> {
           input.SkipLastField();
           break;
         case 8: {
-          Id = input.ReadInt32();
+          Id = input.ReadSInt32();
           break;
         }
         case 18: {
