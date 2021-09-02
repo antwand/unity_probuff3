@@ -50,7 +50,7 @@ public class Test : MonoBehaviour
 
     public void onConet()
     {
-        bool isconet = SocketClient.Instance.Init("192.168.0.115", 20100);
+        bool isconet = SocketClient.Instance.Init("192.168.0.60", 20100);
     }
 
 

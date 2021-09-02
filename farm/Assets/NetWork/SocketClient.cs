@@ -255,7 +255,9 @@ namespace UGCF.Network
         {
                 Debug.Log("发送数据");
             int sendLength = mSocket.Send(NetWorkUtils.BuildPackage(c2s, true), SocketFlags.None);
-            sendSuccess = sendLength > 0;
+               
+
+                sendSuccess = sendLength > 0;
             if (sendSuccess)
             {
                 if (sendList.Contains(c2s))
@@ -277,6 +279,26 @@ namespace UGCF.Network
         }
          return sendSuccess;
         }
+
+
+
+
+
+
+
+        private void SendCallBack(IAsyncResult ar)
+        {
+            try
+            {
+                int count = mSocket.EndSend(ar);
+                //Debug.Log("向服务器发送的字节数EndSend" + count);
+            }
+            catch (Exception e)
+            {
+                //Close();
+            }
+        }
+
         #endregion
 
         #region ...接收消息

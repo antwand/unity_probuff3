@@ -15,6 +15,7 @@ using Google.Protobuf.Reflection;
 using System.Runtime.InteropServices;
 using System.IO;
 using CCEngine;
+using System.Text;
 
 namespace UGCF.Network
 {
@@ -40,19 +41,19 @@ namespace UGCF.Network
 
 
             //byte[] b = ProtobufSerilizer.Serialize(c2s);
-            byte[] b = c2s.ToByteArray();
+            byte[] ctsByte = c2s.ToByteArray();
 
 
-           // C0001_HeartbeatReqMessage h = new C0001_HeartbeatReqMessage();
-           // h.SendTime = 15f;
-           // byte[] hbyte = c2s.ToByteArray();
-          //  Debug.Log(hbyte.Length);
-          //  Debug.Log(hbyte.Length + 4 + 4 * 3);
+            // C0001_HeartbeatReqMessage h = new C0001_HeartbeatReqMessage();
+            // h.SendTime = 15f;
+            // byte[] hbyte = c2s.ToByteArray();
+            //  Debug.Log(hbyte.Length);
+            //  Debug.Log(hbyte.Length + 4 + 4 * 3);
 
             //byte[] data = new byte[] { 1, c2s.ToByteString(), 0,0 };
             //byte[] b = new byte[0];
-            if (b == null)
-                return new byte[0];
+            //if (b == null)
+            //    return new byte[0];
 
 
             // ProtobufByteBuffer buf = null;
@@ -89,31 +90,46 @@ namespace UGCF.Network
 
 
 
-            //NetBufferWriter writer = new NetBufferWriter();
-            //writer.WriteString("abc");
-            //return writer.Finish();
+            //构造
+            /**
+            string msg = "你好呀";
+            byte[] data = new byte[1024 * 1024 * 3];
+            data = Encoding.UTF8.GetBytes(msg);
+
+            int msgID = 1;
+            TSocketMessage ts = new TSocketMessage(msgID, data);
+            MarshalEndian marshalEndian = new MarshalEndian();
+            byte[] marshalEndian_buff = marshalEndian.Encode(ts);
+            return (marshalEndian_buff);
+            **/
 
 
-            string message = "abc";
+            //内容的长度 
+            int msglen = ctsByte.Length;
+            byte[] msglen_bytes = ByteConvertHelper.Int32ToBytes((uint)msglen);
+
             MemoryStream ms = null;
             using (ms = new MemoryStream())
             {
                 ms.Position = 0;
                 BinaryWriter writer = new BinaryWriter(ms);
-                ushort msglen = (ushort)message.Length;
-                writer.Write(msglen);
-                writer.Write(message);
+
+                writer.Write(msglen_bytes);//写入长度 
+                writer.Write(ctsByte);//数据
                 writer.Flush();
                 return ms.ToArray();
             }
 
 
 
-           // MemoryStream m_stream = new MemoryStream();
-           // BinaryWriter m_writer = new BinaryWriter(m_stream);
-           // m_writer.Write(7);
-           //m_writer.Write(10);
-           //m_clientSocket.Send(writer.Finish());
+
+            //Buffer.BlockCopy(b1, 0, b3, 0, b1.Length);//这种方法仅适用于字节数组
+
+            // MemoryStream m_stream = new MemoryStream();
+            // BinaryWriter m_writer = new BinaryWriter(m_stream);
+            // m_writer.Write(7);
+            //m_writer.Write(10);
+            //m_clientSocket.Send(writer.Finish());
 
 
             /**

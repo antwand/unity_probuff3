@@ -2,7 +2,8 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-
+using UnityEditor.PackageManager;
+using UnityEngine;
 using System;
 
 namespace CCEngine
@@ -47,10 +48,55 @@ namespace CCEngine
         }
 
 
+        ////////////////////////////////////////////////////////////////////////
 
 
+        // Start is called before the first frame update
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        ///  //与这个的区别  byte[] data = BitConverter.GetBytes((Int32)6);
+        public static byte[] Int32ToBytes(uint number)
+        {
+            byte[] bs = new byte[4];
+            byte a = (byte)(number >> 24);
+            byte b = (byte)((number & 0xff0000) >> 16);
+            byte c = (byte)((number & 0xff00) >> 8);
+            byte d = (byte)(number & 0xff);
+            bs[0] = a;
+            bs[1] = b;
+            bs[2] = c;
+            bs[3] = d;
+            return bs;
+        }
 
 
+        /**
+         * 
+         * */
+        public static uint BytesToInt32(byte[] bs)
+        {
+            if (bs == null || bs.Length != 4)
+            {
+                throw new EncryptionException(ErrorCode.Unknown, "传入数组长度不为4");
+            }
+            //获取最高八位
+            uint num1 = 0;
+            num1 = (uint)(Convert.ToInt32(num1) ^ (int)bs[0]);
+            num1 = num1 << 24;
+            //获取第二高八位
+            uint num2 = 0;
+            num2 = (uint)(Convert.ToInt32(num2) ^ (int)bs[1]);
+            num2 = num2 << 16;
+            //获取第二低八位
+            uint num3 = 0;
+            num3 = (uint)(Convert.ToInt32(num3) ^ (int)bs[2]);
+            num3 = num3 << 8;
+            //获取低八位
+            uint num4 = 0;
+            num4 = (uint)(Convert.ToInt32(num4) ^ (int)bs[3]);
+            return num1 ^ num2 ^ num3 ^ num4;
+        }
 
 
 
