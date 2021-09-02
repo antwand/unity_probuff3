@@ -78,7 +78,8 @@ namespace CCEngine
         {
             if (bs == null || bs.Length != 4)
             {
-                throw new EncryptionException(ErrorCode.Unknown, "传入数组长度不为4");
+                //throw new Error("传入数组长度不为4");
+                Debug.LogError("传入数组长度不为4");
             }
             //获取最高八位
             uint num1 = 0;

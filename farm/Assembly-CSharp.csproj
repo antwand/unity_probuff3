@@ -68,16 +68,6 @@
     <Compile Include="Assets\Util\Buff\NetBufferReader.cs" />
     <Compile Include="Assets\UnityExtend\Loom.cs" />
     <Compile Include="Assets\Util\Buff\NetBufferWriter.cs" />
-    <Compile Include="Assets\Test\demo1\MyMemoryStream.cs" />
-    <Compile Include="Assets\Test\demo2\MessageHandle.cs" />
-    <Compile Include="Assets\Test\demo1\Test1.cs" />
-    <Compile Include="Assets\Test\demo2\TestSocketClient.cs" />
-    <Compile Include="Assets\Test\demo2\MessageProtocol.cs" />
-    <Compile Include="Assets\Test\demo2\Test2.cs" />
-    <Compile Include="Assets\Test\MarshalEndian.cs" />
-    <Compile Include="Assets\Test\TSocketMessage.cs" />
-    <Compile Include="Assets\Test\demo3\Test3.cs" />
-    <Compile Include="Assets\Test\demo3\EncryptionException.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
