@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 
-namespace CCEngine
+namespace UGCF.Utils
 {
     public partial class LogUtils
     {

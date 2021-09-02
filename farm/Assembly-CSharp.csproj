@@ -53,7 +53,7 @@
     <UnityVersion>2020.3.16f1c1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Assets\CCEnger\Util\Buff\ByteConvertHelper.cs" />
+    <Compile Include="Assets\CCEnger\Buff\ByteConvertHelper.cs" />
     <Compile Include="Assets\CCEnger\NetWork\NetWorkUtils.cs" />
     <Compile Include="Assets\CCEnger\NetWork\MessageListener.cs" />
     <Compile Include="Assets\CCEnger\NetWork\MessageProcessor.cs" />
@@ -65,9 +65,9 @@
     <Compile Include="Assets\CCEnger\Util\WaitForUtils.cs" />
     <Compile Include="Assets\CCEnger\NetWork\ProtobufByteBuffer.cs" />
     <Compile Include="Assets\Scripts\Prodata.cs" />
-    <Compile Include="Assets\CCEnger\Util\Buff\NetBufferReader.cs" />
+    <Compile Include="Assets\CCEnger\Buff\NetBufferReader.cs" />
     <Compile Include="Assets\UnityExtend\Loom.cs" />
-    <Compile Include="Assets\CCEnger\Util\Buff\NetBufferWriter.cs" />
+    <Compile Include="Assets\CCEnger\Buff\NetBufferWriter.cs" />
     <Compile Include="Assets\CCEnger\Util\LogUtils.cs" />
     <Compile Include="Assets\CCEnger\UGCFMain.cs" />
   </ItemGroup>
