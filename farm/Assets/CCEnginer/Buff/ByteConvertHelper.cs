@@ -71,9 +71,11 @@ namespace CCEngine
         }
 
 
-        /**
-         *  BytesToInt32  转int32 
-         * */
+         /// <summary>
+         ///  BytesToInt32  转int32 
+         /// </summary>
+         /// <param name="bs"></param>
+         /// <returns></returns>
         public static uint BytesToInt32(byte[] bs)
         {
             if (bs == null || bs.Length != 4)
@@ -122,9 +124,10 @@ namespace CCEngine
 
 
 
-        /**
-         *  打印 byte 数组的  
-         * **/
+         /// <summary>
+         /// 打印 byte 数组的  
+         /// </summary>
+         /// <param name="bytes"></param>
         public static void Console(Byte[] bytes)
         {
             //double d = 123.465;
@@ -142,9 +145,12 @@ namespace CCEngine
             Debug.Log("s:"+s);
         }
 
-        /**
-         *  吧 struct 转化为 byte数组 
-         * */
+       
+         /// <summary>
+         /// 吧 struct 转化为 byte数组 
+         /// </summary>
+         /// <param name="structObj"></param>
+         /// <returns></returns>
         public static byte[] StructToBytes(object structObj)
         {
             int size = Marshal.SizeOf(structObj);
