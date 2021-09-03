@@ -6,7 +6,7 @@ namespace UGCF.Network
     {
         void OnDestroy()
         {
-            //gameObject.RemoveAllListener();
+            gameObject.RemoveAllListener();
         }
     }
 }

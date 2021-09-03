@@ -6,10 +6,9 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Net;
 //using protocol;
-// using UGCF.Manager;
+//using UGCF.Manager;
 using UGCF.UnityExtend;
- using UGCF.Utils;
-using CCEngine;
+using UGCF.Utils;
 
 namespace UGCF.Network
 {
@@ -45,10 +44,10 @@ namespace UGCF.Network
         private bool threadReciveAlive;
 
         private int isConnected = -1;// 判断当前连接状态 -1-未开始连接，0-连接失败，1-连接成功
-        private Queue<object> allPackages = new Queue<object>();//所有接收后还未处理的数据包
-        private List<object> sendList = new List<object>();
-         private List<object> tempSendList = new List<object>();
-         private List<object> reconnectSendList = new List<object>();//重连后需要重新发送的消息
+        private Queue<Msg_S2C> allPackages = new Queue<Msg_S2C>();//所有接收后还未处理的数据包
+        private List<Msg_C2S> sendList = new List<Msg_C2S>();
+        private List<Msg_C2S> tempSendList = new List<Msg_C2S>();
+        private List<Msg_C2S> reconnectSendList = new List<Msg_C2S>();//重连后需要重新发送的消息
         private ManualResetEvent manual = new ManualResetEvent(false);
 
         #region ...创建socket连接
@@ -60,12 +59,11 @@ namespace UGCF.Network
             this.port = port;
             if (!isReconnect)
             {
-                 allPackages.Clear();
-                 sendList.Clear();
-                 tempSendList.Clear();
+                allPackages.Clear();
+                sendList.Clear();
+                tempSendList.Clear();
             }
             mSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
             return SocketConnection(isReconnect);
         }
 
@@ -77,7 +75,6 @@ namespace UGCF.Network
             try
             {
                 IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(ip), port);
-                Debug.Log(ipep.Address);
                 IAsyncResult asyncresult = mSocket.BeginConnect(ipep, ConnectCallBack, mSocket);
                 if (asyncresult.AsyncWaitHandle.WaitOne(5000, false))
                 {
@@ -92,7 +89,7 @@ namespace UGCF.Network
                             threadSendAlive = true;
                             threadSend = new Thread(new ThreadStart(SendMessage));
                             threadSend.Start();
-                            Debug.Log("(Init):threadSend线程初始化");
+                            LogUtils.Log("(Init):threadSend线程初始化");
                         }
 
                         if (threadRecive == null)
@@ -100,19 +97,17 @@ namespace UGCF.Network
                             threadReciveAlive = true;
                             threadRecive = new Thread(new ThreadStart(ReceiveMessage));
                             threadRecive.Start();
-                            Debug.Log("(Init):threadRecive线程初始化");
+                            LogUtils.Log("(Init):threadRecive线程初始化");
                         }
                         StartCoroutine(AnalysisMessage());
                         CreateHeart();
-                        
                         if (reconnectSendList.Count > 0)
                         {
                             tempSendList.InsertRange(0, reconnectSendList);
                             reconnectSendList.Clear();
                         }
-                        Debug.Log("建立连接成功!");
-                        
-                         return true;
+                        LogUtils.Log("建立连接成功!");
+                        return true;
                     }
                     else
                     {
@@ -128,19 +123,19 @@ namespace UGCF.Network
             }
             catch (Exception e)
             {
-                Debug.Log(e.Message);
+                LogUtils.Log(e.Message);
                 ConnectLose(isReconnect);
-                 return false;
+                return false;
             }
         }
 
         void ConnectLose(bool isReconnect)
         {
-             isReconnecting = false;
-             if (!isReconnect)
-              {
-                 CloseSocket();
-              }
+            isReconnecting = false;
+            if (!isReconnect)
+            {
+                CloseSocket();
+            }
         }
 
         /// <summary>
@@ -156,13 +151,12 @@ namespace UGCF.Network
                 {
                     socketClient.EndConnect(asyncresult);
                     isConnected = 1;
-                    Debug.Log("连接成功");
                 }
             }
             catch (Exception e)
             {
                 isConnected = 0;
-                Debug.Log(e.ToString());
+                LogUtils.Log(e.ToString());
             }
             finally
             {
@@ -191,8 +185,8 @@ namespace UGCF.Network
         {
             while (true)
             {
-                 yield return WaitForUtils.WaitForSecondsRealtime(10);
-                // MessageProcessor.SendMessage(ProtoId.SYSTEM_HEART);
+                yield return WaitForUtils.WaitForSecondsRealtime(10);
+                MessageProcessor.SendMessage(ProtoId.SystemHeart);
             }
         }
         #endregion
@@ -202,12 +196,12 @@ namespace UGCF.Network
         /// 添加数据到发送队列
         /// </summary>
         /// <param name="c2s">消息主体</param>
-        public void AddSendMessageQueue(object c2s)
+        public void AddSendMessageQueue(Msg_C2S c2s)
         {
             lock (tempSendList)
             {
                 tempSendList.Add(c2s);
-                //LogUtils.Log("添加消息到发送队列：" + c2s.protoId);
+                LogUtils.Log("添加消息到发送队列：" + c2s.ProtoId);
             }
         }
 
@@ -241,65 +235,42 @@ namespace UGCF.Network
                         ToReconnect();
                     else
                     {
-                        //if (sendList.Count == 0 || !Send(sendList[0]))
-                          //  ToReconnect();
+                        if (sendList.Count == 0 || !Send(sendList[0]))
+                            ToReconnect();
                     }
                 }
             }
-            Debug.Log("结束线程：SendMessage");
+            LogUtils.Log("结束线程：SendMessage");
         }
 
-        public bool Send(Header c2s)
+        bool Send(Msg_C2S c2s)
         {
-          bool sendSuccess = false;
-        try
-        {
-                Debug.Log("发送数据");
-                int sendLength = mSocket.Send(NetWorkUtils.BuildPackage(c2s, true), SocketFlags.None);
-               
-
-                sendSuccess = sendLength > 0;
-            if (sendSuccess)
-            {
-                if (sendList.Contains(c2s))
-                    sendList.Remove(c2s);
-                Debug.Log("发送消息成功：" + c2s);
-            }
-        }
-        catch (SocketException ex)
-        {
-            if (ex.NativeErrorCode.Equals(10035))//对于10035异常，出现在缓冲区满的情况，消息需要重发
-                return Send(c2s);
-            else
-                sendSuccess = false;
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.ToString());
-            sendSuccess = false;
-        }
-         return sendSuccess;
-        }
-
-
-
-
-
-
-
-        private void SendCallBack(IAsyncResult ar)
-        {
+            bool sendSuccess = false;
             try
             {
-                int count = mSocket.EndSend(ar);
-                Debug.Log("向服务器发送的字节数EndSend" + count);
+                int sendLength = mSocket.Send(NetWorkUtils.BuildPackage(c2s, true), SocketFlags.None);
+                sendSuccess = sendLength > 0;
+                if (sendSuccess)
+                {
+                    if (sendList.Contains(c2s))
+                        sendList.Remove(c2s);
+                    LogUtils.Log("发送消息成功：" + c2s.ProtoId);
+                }
+            }
+            catch (SocketException ex)
+            {
+                if (ex.NativeErrorCode.Equals(10035))//对于10035异常，出现在缓冲区满的情况，消息需要重发
+                    return Send(c2s);
+                else
+                    sendSuccess = false;
             }
             catch (Exception e)
             {
-                //Close();
+                LogUtils.Log(e.ToString());
+                sendSuccess = false;
             }
+            return sendSuccess;
         }
-
         #endregion
 
         #region ...接收消息
@@ -308,28 +279,27 @@ namespace UGCF.Network
         /// </summary>
         IEnumerator AnalysisMessage()
         {
-            // while (threadReciveAlive)
-            // {
-            //     Msg_S2C message = null;
-            //     lock (allPackages)
-            //     {
-            //         if (allPackages.Count > 0)
-            //             message = allPackages.Dequeue();
-            //     }
-            //     if (message != null)
-            //     {
-            //         LogUtils.Log("收到消息：" + message.protoId);
-            //         MessageProcessor.AnalysisMessage(message);
-            //     }
-            //     yield return WaitForUtils.WaitFrame;
-            // }
-            yield return null;
+            while (threadReciveAlive)
+            {
+                Msg_S2C message = null;
+                lock (allPackages)
+                {
+                    if (allPackages.Count > 0)
+                        message = allPackages.Dequeue();
+                }
+                if (message != null)
+                {
+                    LogUtils.Log("收到消息：" + message.ProtoId);
+                    MessageProcessor.AnalysisMessage(message);
+                }
+                yield return WaitForUtils.WaitFrame;
+            }
         }
 
-        // <summary>
-        // 接收数据
-        // </summary>
-        void ReceiveMessage() 
+        /// <summary>
+        /// 接收数据
+        /// </summary>
+        void ReceiveMessage()
         {
             while (threadReciveAlive)
             {
@@ -340,15 +310,16 @@ namespace UGCF.Network
                     int bodyLength = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(recvBytesHead, 0));
                     if (bodyLength == 0)
                         continue;
-                    //lock (allPackages)
-                        //allPackages.Enqueue(ProtobufSerilizer.DeSerialize<T>(GetBytesReceive(bodyLength)));
+                    lock (allPackages)
+                        allPackages.Enqueue(ProtobufSerilizer.DeSerialize(GetBytesReceive(bodyLength)));
+                        //allPackages.Enqueue(ProtobufSerilizer.DeSerialize<Msg_S2C>(GetBytesReceive(bodyLength)));
                 }
                 else
                 {
-                    Debug.Log("ReceiveMessage：未接收到数据");
+                    LogUtils.Log("ReceiveMessage：未接收到数据");
                 }
             }
-            Debug.Log("结束线程：ReceiveMessage");
+            LogUtils.Log("结束线程：ReceiveMessage");
         }
 
         /// <summary>
@@ -402,10 +373,10 @@ namespace UGCF.Network
         }
 
         #region ...重连
-         bool isReconnecting = false;
+        bool isReconnecting = false;
         void ToReconnect()
         {
-            Debug.Log("正在尝试发起重连");
+            LogUtils.Log("正在尝试发起重连");
             if (isReconnecting)
                 return;
             isReconnecting = true;
@@ -418,7 +389,7 @@ namespace UGCF.Network
         /// </summary>
         void Reconnect()
         {
-            Debug.Log("正在尝试重连");
+            LogUtils.Log("正在尝试重连");
             if (!this)
                 return;
             CloseSocket();
@@ -457,7 +428,7 @@ namespace UGCF.Network
         {
             try
             {
-                Debug.Log("关闭Socket");
+                LogUtils.Log("关闭Socket");
                 PauseThread();
                 if (mSocket != null && mSocket.Connected)
                 {
@@ -470,7 +441,7 @@ namespace UGCF.Network
             }
             catch (Exception e)
             {
-                Debug.Log(e.ToString());
+                LogUtils.Log(e.ToString());
                 if (closeSocketLoopCount < 2)
                 {
                     closeSocketLoopCount++;
@@ -489,15 +460,15 @@ namespace UGCF.Network
             Destroy(gameObject);
         }
 
-         public void ContinueThread()
-         {
-             Debug.Log("线程继续");
-             manual.Set();
-         }
+        public void ContinueThread()
+        {
+            LogUtils.Log("线程继续");
+            manual.Set();
+        }
 
         public void PauseThread()
         {
-            Debug.Log("线程暂停");
+            LogUtils.Log("线程暂停");
             manual.Reset();
         }
 
